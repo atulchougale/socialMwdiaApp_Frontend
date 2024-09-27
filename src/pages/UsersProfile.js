@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 
 const UsersProfile = () => {
   const { userId } = useParams(); 
-  console.log("pro",userId);
+//   console.log("pro",userId);
   
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -16,7 +16,7 @@ const UsersProfile = () => {
 
   const myProfile = localStorage.getItem("user");
   const loggedInUserId = myProfile ? JSON.parse(myProfile).id : null;
-console.log(loggedInUserId);
+// console.log(loggedInUserId);
 
   useEffect(() => {
     const fetchUserProfile = async () => {

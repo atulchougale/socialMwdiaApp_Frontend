@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const Profile = () => {
     const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  console.log("usersssss", user);
+//   console.log("usersssss", user);
 
   const [posts, setPosts] = useState([]);
 //   console.log("profile",posts);

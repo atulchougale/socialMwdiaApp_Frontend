@@ -11,12 +11,15 @@ import {
 import api from "../utils/api";
 import "../styles/SearchPage.css";
 import Post from "./Post";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("users");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -37,6 +40,10 @@ const Search = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const usersProfile = (userId) => {
+    navigate(`/users-profile/${userId}`);
   };
 
   return (
@@ -79,7 +86,7 @@ const Search = () => {
         {results.map((item) =>
           activeTab === "users" ? (
             <Col xs={10} md={6} lg={4} key={item._id} className="mb-4">
-              <Card className="user-card">
+              <Card className="user-card" onClick={() => usersProfile(item._id)} style={{ cursor: "pointer" }}>
                 <Card.Body>
                   <Card.Title>{item.username}</Card.Title>
                   <Card.Text>Email: {item.email}</Card.Text>
@@ -89,7 +96,7 @@ const Search = () => {
             </Col>
           ) : (
             <Col xs={10} md={10} lg={10} key={item._id} className="mb-4">
-              <Post post={item} /> {/* Directly pass the post object */}
+              <Post post={item} />
             </Col>
           )
         )}
