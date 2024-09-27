@@ -1,13 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 
 const NavBar = ({ isLoggedIn, onLogout }) => {
+
+
   return (
     <Navbar bg="light" expand="lg">
       <div className="container">
         <Navbar.Brand as={Link} to="/">
-          MySocialApp
+        &nbsp; 𝕄𝕐 Social Media &nbsp;
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -15,9 +17,7 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
             <Nav.Link as={Link} to="/">
               Home
             </Nav.Link>
-            <Nav.Link as={Link} to="/posts">
-              Posts
-            </Nav.Link>
+            
             <Nav.Link as={Link} to="/create-post">
               Create Post
             </Nav.Link>
@@ -28,11 +28,17 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
             <Nav.Link as={Link} to="/contact">
               Contact
             </Nav.Link>
+
+            <Nav.Link as={Link} to="/search">
+              Search
+            </Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link as={Link} to="/message">
-              Message
-            </Nav.Link>
+            {isLoggedIn && (
+              <Nav.Link as={Link} to="/message">
+                Message
+              </Nav.Link>
+            )}
             {isLoggedIn ? (
               <NavDropdown title="Profile" id="basic-nav-dropdown">
                 <NavDropdown.Item as={Link} to="/profile">

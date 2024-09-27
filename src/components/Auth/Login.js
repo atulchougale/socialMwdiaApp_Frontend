@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 import api from '../../utils/api'; 
 import '../../styles/Auth.css';
 
-const Login = () => {
+const Login = ({setIsAuthenticated}) => {
+    
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
@@ -14,6 +15,7 @@ const Login = () => {
     const [error, setError] = useState('');
 
     const handleChange = (e) => {
+
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -32,13 +34,17 @@ const Login = () => {
         try {
             const response = await api.post('/auth/login', formData); 
             
-            const { token } = response.data; 
-
             
-            localStorage.setItem('token', token);
-
-            toast.success('Login successful! Redirecting...');
-            navigate('/'); 
+            if (response.status === 200) {
+                const { token, user } = response.data;
+                
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(user));
+                setIsAuthenticated(true); 
+                toast.success('Logged in successfully!');
+                navigate('/');
+              }
+            
         } catch (error) {
             setError(error.response?.data?.message || 'Login failed');
             toast.error('Login failed: ' + (error.response?.data?.message || 'Something went wrong'));

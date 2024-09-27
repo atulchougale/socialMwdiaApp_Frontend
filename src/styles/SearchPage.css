@@ -1,0 +1,28 @@
+.search-container {
+    padding: 20px;
+  }
+  
+  .user-card {
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    transition: transform 0.2s;
+  }
+  
+  .user-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .post-card {
+    border: 1px solid #6c757d;
+    border-radius: 8px;
+    transition: transform 0.2s;
+  }
+  
+  .post-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .search-container .btn-primary {
+    border-radius: 20px;
+  }
+  
