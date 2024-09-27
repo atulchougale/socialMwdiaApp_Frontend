@@ -1,26 +1,48 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'; 
+import api from '../../utils/api'; 
 import '../../styles/Auth.css';
-import { useNavigate } from 'react-router-dom'; 
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
     const [error, setError] = useState('');
-    const navigate = useNavigate(); 
 
-    const handleSubmit = (e) => {
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-      
+        const { email, password } = formData;
+
         if (!email || !password) {
             setError('Please fill in all fields');
             return;
         }
 
-        
         setError('');
-        console.log('Logged in with:', { email, password });
+
+        try {
+            const response = await api.post('/auth/login', formData); 
+            
+            const { token } = response.data; 
+
+            
+            localStorage.setItem('token', token);
+
+            toast.success('Login successful! Redirecting...');
+            navigate('/'); 
+        } catch (error) {
+            setError(error.response?.data?.message || 'Login failed');
+            toast.error('Login failed: ' + (error.response?.data?.message || 'Something went wrong'));
+        }
     };
 
     return (
@@ -34,8 +56,9 @@ const Login = () => {
                         <Form.Control
                             type="email"
                             placeholder="Enter email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
                         />
                     </Form.Group>
 
@@ -44,27 +67,15 @@ const Login = () => {
                         <Form.Control
                             type="password"
                             placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
                         />
                     </Form.Group>
 
                     <Button variant="primary" type="submit" className="mt-4">
                         Login
                     </Button>
-
-                    <div className="mt-3">
-                        <p>
-                            Don't have an account?{' '}
-                            <Button  className='btn btn-warning'
-                                variant="warning"
-                                onClick={() => navigate('/register')} 
-                                
-                            >
-                                Register here
-                            </Button>
-                        </p>
-                    </div>
                 </Form>
             </div>
         </div>

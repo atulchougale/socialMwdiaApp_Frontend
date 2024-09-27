@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'; 
+
+import api from '../../utils/api';
+
 import '../../styles/Auth.css';
-import { useNavigate } from 'react-router-dom'; 
+
 const Register = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
-        confirmPassword: '',
+        confirmPassword: '', 
     });
     const [error, setError] = useState('');
-
+    
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        
+        
     };
 
     const validatePassword = (password) => {
@@ -21,7 +28,7 @@ const Register = () => {
         return passwordRegex.test(password);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const { username, email, password, confirmPassword } = formData;
@@ -42,7 +49,15 @@ const Register = () => {
         }
 
         setError('');
-        console.log('Registered with:', formData);
+
+        try {
+            const response = await api.post('/auth/register', formData);            toast.success('Registration successful! Please log in.'); 
+            navigate('/login'); 
+        } catch (error) {
+            console.error('Registration error:', error); 
+            setError(error.response?.data?.message || 'Registration failed'); 
+            toast.error('Registration failed: ' + (error.response?.data?.message || 'Something went wrong')); 
+        }
     };
 
     return (
@@ -101,13 +116,9 @@ const Register = () => {
 
                     <div className="mt-3">
                         <p>
-                            Don't have an account?{' '}
-                            <Button  className='btn btn-warning'
-                                variant="warning"
-                                onClick={() => navigate('/register')} 
-                                
-                            >
-                                Register here
+                            Already have an account?{' '}
+                            <Button className='btn btn-warning' variant="warning" onClick={() => navigate('/login')}>
+                                Log in here
                             </Button>
                         </p>
                     </div>
