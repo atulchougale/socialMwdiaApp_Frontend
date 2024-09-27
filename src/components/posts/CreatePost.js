@@ -39,7 +39,7 @@ const CreatePost = () => {
 
       if (response.status === 201) {
         toast.success("Post created successfully!");
-        navigate("/posts"); 
+        navigate("/"); 
       }
     } catch (error) {
       console.error("Error creating post:", error);

@@ -100,7 +100,7 @@ const navigate = useNavigate();
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" disabled={loading}>
+        <Button variant="primary" type="submit" disabled={loading} className="mt-3">
           {loading ? "Updating..." : "Update Profile"}
         </Button>
       </Form>

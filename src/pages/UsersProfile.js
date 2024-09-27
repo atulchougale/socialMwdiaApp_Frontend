@@ -25,7 +25,7 @@ console.log(loggedInUserId);
         setUser(response.data);
 
         // Fetch posts specifically for the user being viewed
-        const postsResponse = await api.get(`/posts/user/66f65cf465d18578d03bb701`);
+        const postsResponse = await api.get(`/posts/user/${userId}`);
         setPosts(postsResponse.data);
 
         // Check if the logged-in user is following this user

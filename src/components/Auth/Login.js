@@ -82,6 +82,15 @@ const Login = ({setIsAuthenticated}) => {
                     <Button variant="primary" type="submit" className="mt-4">
                         Login
                     </Button>
+
+                    <div className="mt-3">
+                        <p>
+                            You Don't have an account?{' '}
+                            <Button className='btn btn-warning' variant="warning" onClick={() => navigate('/register')}>
+                                Create New
+                            </Button>
+                        </p>
+                    </div>
                 </Form>
             </div>
         </div>
