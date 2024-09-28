@@ -11,12 +11,14 @@ const UpdatePost = () => {
   const [video, setVideo] = useState(null);
   const [error, setError] = useState("");
   const { id } = useParams(); 
+
+  
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await api.get(`/posts/${id}`);
+        const response = await api.get(`/posts/posts/${id}`);
         const postData = response.data;
         setTitle(postData.title);
         setPostContent(postData.postContent);
@@ -54,7 +56,7 @@ const UpdatePost = () => {
 
       if (response.status === 200) {
         toast.success("Post updated successfully!");
-        navigate(`/posts`); 
+        navigate(`/`); 
       }
     } catch (error) {
       console.error("Error updating post:", error);

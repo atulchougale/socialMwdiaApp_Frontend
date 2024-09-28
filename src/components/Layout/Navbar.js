@@ -35,7 +35,7 @@ const NavBar = ({ isLoggedIn, onLogout }) => {
           </Nav>
           <Nav>
             {isLoggedIn && (
-              <Nav.Link as={Link} to="/message">
+              <Nav.Link as={Link} to="/chat">
                 Message
               </Nav.Link>
             )}

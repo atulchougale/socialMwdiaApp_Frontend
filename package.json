@@ -1,6 +1,7 @@
 {
   "name": "social-media-app",
   "version": "0.1.0",
+  "proxy": "http://localhost:5000",
   "private": true,
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
@@ -23,6 +24,7 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "redux": "^5.0.1",
+    "socket.io-client": "^4.8.0",
     "styled-components": "^6.1.13",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"

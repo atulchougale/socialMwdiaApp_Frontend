@@ -16,6 +16,7 @@ import Profile from './pages/Profile';
 import Search from './pages/Search';
 import EditProfile from './pages/EditProfile';
 import UsersProfile from './pages/UsersProfile';
+import Chat from './pages/Chat';
 
 const PrivateRoute = ({ isAuthenticated, children }) => {
   return isAuthenticated ? (
@@ -73,6 +74,10 @@ const App = () => {
 
         <Route path="/users-profile/:userId" element={<PrivateRoute isAuthenticated={isAuthenticated}>
         <UsersProfile  onLogout={handleLogout}/> 
+        </PrivateRoute>} />
+
+        <Route path="/chat" element={<PrivateRoute isAuthenticated={isAuthenticated}>
+        <Chat component={Chat}  onLogout={handleLogout}/> 
         </PrivateRoute>} />
 
         
