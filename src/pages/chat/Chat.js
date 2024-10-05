@@ -30,7 +30,7 @@ function Chat() {
         bg-opacity-0"
         style={{ width: "80%", height:"86vh", marginLeft: "10%", shadow:"0 0.125rem 0.25rem rgba(1, 1, 2, 0.075)",zIndex:"0" }}
       >
-        {/* Sidebar */}
+       
         <div
           className={`md:w-1/3 lg:w-1/4 ${
             isSidebarVisible ? "block" : "hidden md:block"
@@ -39,14 +39,14 @@ function Chat() {
           <Sidebar onSelectUser={handleUserSelect} />
         </div>
 
-        {/* Divider (visible only when a user is selected) */}
+        
         <div
           className={`divider divider-horizontal ${
             selectedUser ? "block" : "hidden md:block"
           }`}
         ></div>
 
-        {/* Message Container with Blur Background */}
+       
         <div
           className={`flex-1 ${selectedUser ? "block" : "hidden md:flex"} 
         bg-gray-200 rounded-lg shadow-lg 
