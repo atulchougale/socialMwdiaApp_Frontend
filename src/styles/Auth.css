@@ -1,71 +1,56 @@
-
-
-.auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f8f9fa; /* Light background */
-}
-
-.auth-form {
-    background-color: #fff;
+/* Custom CSS for a closer match */
+.custom-bg {
+    background: rgba(255, 255, 255, 0.1); /* Adjust transparency */
+    backdrop-filter: blur(20px);          /* Increase blur for a more frosted look */
+    border-radius: 20px;                  /* Adjust corner radius */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); /* Increase shadow for better contrast */
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
     max-width: 400px;
-    width: 100%;
-}
+  }
+  
+  .custom-bg1 {
+    background: rgba(255, 255, 255, 0.1); /* Adjust transparency */
+    backdrop-filter: blur(20px);          /* Increase blur for a more frosted look */
+    border-radius: 20px;                  /* Adjust corner radius */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); /* Increase shadow for better contrast */
+    padding: 30px;
+    max-width: 500px;
+  }
 
-.auth-form h2 {
-    margin-bottom: 20px;
-    color: #007bff; /* Bootstrap primary color */
-}
-
-.auth-form .form-label {
-    font-weight: 600;
-    color: #495057;
-}
-
-.auth-form .form-control {
-    border-radius: 5px;
-}
-
-.auth-form .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    width: 100%;
-    border-radius: 5px;
-}
-
-.auth-form .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-}
-
-.auth-form .btn-warning {
-    background-color: #ffc107;
+  .custom-btn {
+    background-color: #000;   /* Button color */
     border: none;
-    color: #fff;
     border-radius: 5px;
-}
-
-.auth-form .btn-warning:hover {
-    background-color: #e0a800;
     color: #fff;
-}
+    padding: 10px 20px;       /* Adjust padding for a more consistent look */
+    transition: transform 0.3s, background-color 0.3s;
+  }
+  
+  .custom-btn:hover {
+    background-color: #333;
+    transform: scale(1.05); /* Slight zoom effect on hover */
+  }
+  
+  .input-style {
+    border-radius: 5px;
+    height: 45px;
+    padding: 10px;           /* Ensure consistent padding */
+  }
+  
+  .login-title {
+    color: #fff;
+    font-size: 28px;
+  }
+  
+  .link-style {
+    color: #fff; 
+    text-decoration: none; 
+    font-weight: bold;
+    transition: color 0.3s;
+  }
+  
+  .link-style:hover {
+    color: #00ff00; /* Hover effect to match the register link color */
+  }
+  
 
-.auth-form p {
-    text-align: center;
-    margin-top: 10px;
-    color: #495057;
-}
-
-.auth-form a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.auth-form a:hover {
-    text-decoration: underline;
-}

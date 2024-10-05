@@ -1,7 +1,10 @@
+
+
 .container1 {
     display: flex;
     flex-direction: column;
     align-items: center; 
+
 }
 
 .post-container {
@@ -15,3 +18,20 @@
     max-width: 600px; 
     width: 100%; 
 }
+
+.shadow-box {
+    width: 50%;
+    /* background-color: #fff;  */
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #fff;
+    border-radius: 8px; 
+    box-shadow: 0 20px 30px rgb(255, 255, 255); 
+                     
+  }
+
+  .shadow-box p{
+    font-size: 30px;
+    font-weight: 700;
+    color: aliceblue;
+  }

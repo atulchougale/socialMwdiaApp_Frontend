@@ -49,7 +49,7 @@ const CreatePost = () => {
 
   return (
     <Card className="mt-5 mb-5 shadow-lg" style={{ maxWidth: "600px", margin: "0 auto" }}>
-      <Card.Body>
+      <Card.Body >
         <Card.Title className="justify-content:center">Create a New Post</Card.Title>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">

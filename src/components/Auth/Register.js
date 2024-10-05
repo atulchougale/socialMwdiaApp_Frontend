@@ -1,131 +1,260 @@
-import React, { useState } from 'react';
-import { Form, Button, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify'; 
+import React, { useRef, useState } from "react";
+import { Form, Button, Alert } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-import api from '../../utils/api';
+import api from "../../utils/api";
 
-import '../../styles/Auth.css';
+import "../../styles/Auth.css";
+import { useAuth } from "../../context/AuthContext";
 
 const Register = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '', 
-    });
-    const [error, setError] = useState('');
-    
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        
-        
-    };
+  const emailInputRef = useRef(null);
+  const passInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [inputData, setInputData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-    const validatePassword = (password) => {
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,8}$/;
-        return passwordRegex.test(password);
-    };
+  const { setAuthUser } = useAuth();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const navigate = useNavigate();
 
-        const { username, email, password, confirmPassword } = formData;
+  const [error, setError] = useState("");
 
-        if (!username || !email || !password || !confirmPassword) {
-            setError('Please fill in all fields');
-            return;
-        }
+  const handelInput = (e) => {
+    setInputData({ ...inputData, [e.target.id]: e.target.value });
+  };
 
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
+  console.log(inputData);
 
-        if (!validatePassword(password)) {
-            setError('Password must be 6-8 characters long, include a number, a symbol, and a letter');
-            return;
-        }
+  const selectGender = (selectGender) => {
+    setInputData((prev) => ({
+      ...prev,
+      gender: selectGender === inputData.gender ? "" : selectGender,
+    }));
+  };
 
-        setError('');
+  const validatePassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,8}$/;
+    return passwordRegex.test(password);
+  };
 
-        try {
-            const response = await api.post('/auth/register', formData);            toast.success('Registration successful! Please log in.'); 
-            navigate('/login'); 
-        } catch (error) {
-            console.error('Registration error:', error); 
-            setError(error.response?.data?.message || 'Registration failed'); 
-            toast.error('Registration failed: ' + (error.response?.data?.message || 'Something went wrong')); 
-        }
-    };
+  const handelSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-    return (
-        <div className="auth-container">
-            <div className="auth-form">
-                <h2>Register</h2>
-                {error && <Alert variant="danger">{error}</Alert>}
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="username">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                        />
-                    </Form.Group>
+    const { username, email, password, confirmPassword } = inputData;
 
-                    <Form.Group controlId="email" className="mt-3">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control
-                            type="email"
-                            placeholder="Enter email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                    </Form.Group>
+    if (!username || !email || !password || !confirmPassword) {
+      toast.error("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
 
-                    <Form.Group controlId="password" className="mt-3">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                            type="password"
-                            placeholder="Password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                    </Form.Group>
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      setLoading(false);
+      return;
+    }
 
-                    <Form.Group controlId="confirmPassword" className="mt-3">
-                        <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control
-                            type="password"
-                            placeholder="Confirm Password"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                        />
-                    </Form.Group>
+    if (!validatePassword(password)) {
+      toast.error(
+        "Password must be 6-8 characters long, include a number, a symbol, and a letter"
+      );
+      setLoading(false);
+      return;
+    }
 
-                    <Button variant="primary" type="submit" className="mt-4">
-                        Register
-                    </Button>
+    try {
+      const register = await api.post("/auth/register", inputData);
+      const data = register.data;
+      if (data.success === false) {
+        setLoading(false);
+        toast.error(data.message);
+        console.log(data.message);
+      }
+      toast.success(data?.message);
+      localStorage.setItem("mysocialmedia", JSON.stringify(data));
+      setAuthUser(data);
+      setLoading(false);
+      navigate("/login");
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      toast.error(error?.response?.data?.message);
+    }
+  };
 
-                    <div className="mt-3">
-                        <p>
-                            Already have an account?{' '}
-                            <Button className='btn btn-warning' variant="warning" onClick={() => navigate('/login')}>
-                                Log in here
-                            </Button>
-                        </p>
-                    </div>
-                </Form>
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (passInputRef.current) {
+        passInputRef.current.focus();
+      }
+    }
+  };
+
+  return (
+    <div className="d-flex flex-column align-items-center justify-content-center min-vh-95">
+      <div className="custom-bg1">
+        <h1 className="text-center fw-bold mb-4 login-title">
+          Register <span style={{ color: "#000" }}>MySocialApp</span>
+        </h1>
+        <form onSubmit={handelSubmit} className="d-flex flex-column text-dark">
+          <div className="d-flex gap-5">
+            <div className="mb-3">
+              <label
+                className="form-label fw-bold"
+                htmlFor="email"
+                style={{ color: "#000" }}
+              >
+                <div className="text-start">
+                  <span className="fw-bold text-dark fs-5">UserName :</span>
+                </div>
+              </label>
+              <input
+                id="username"
+                name="username"
+                //   ref={emailInputRef}
+                type="text"
+                onChange={handelInput}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter UserName"
+                required
+                className="form-control input-style"
+              />
             </div>
+
+            <div className="mb-3">
+              <label
+                className="form-label fw-bold"
+                htmlFor="email"
+                style={{ color: "#000" }}
+              >
+                <div className="text-start">
+                  <span className="fw-bold text-dark fs-5">Email :</span>
+                </div>
+              </label>
+              <input
+                id="email"
+                name="email"
+                ref={emailInputRef}
+                type="email"
+                onChange={handelInput}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter email"
+                required
+                className="form-control input-style"
+              />
+            </div>
+          </div>
+
+          <div className="d-flex gap-5">
+            <div className="mb-3">
+              <label
+                className="form-label fw-bold"
+                htmlFor="password"
+                style={{ color: "#000" }}
+              >
+                <span className="fw-bold text-dark fs-5">Password :</span>
+              </label>
+              <input
+                ref={passInputRef}
+                id="password"
+                name="password"
+                type="password"
+                onChange={handelInput}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter password"
+                required
+                className="form-control input-style"
+              />
+            </div>
+
+            <div className="mb-3">
+              <label
+                className="form-label fw-bold"
+                htmlFor="password"
+                style={{ color: "#000" }}
+              >
+                <span className="fw-bold text-dark fs-5">
+                  Conform Password :
+                </span>
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="text"
+                onChange={handelInput}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter Conform password"
+                required
+                className="form-control input-style"
+              />
+            </div>
+          </div>
+
+          <div id="gender" className="d-flex justify-around mb-3">
+            <label
+              className="form-label fw-bold "
+              htmlFor="password"
+              style={{ color: "#000" }}
+            >
+              <span className="fw-bold text-dark fs-5 me-3">Male</span>
+              <input
+                onChange={() => selectGender("male")}
+                checked={inputData.gender === "male"}
+                type="checkbox"
+                className="checkbox checkbox-info"
+              />
+            </label>
+
+            <label
+              className="form-label fw-bold"
+              htmlFor="password"
+              style={{ color: "#000" }}
+            >
+              <span className="fw-bold text-dark fs-5 me-3">Female</span>
+              <input
+                checked={inputData.gender === "female"}
+                onChange={() => selectGender("female")}
+                type="checkbox"
+                className="checkbox checkbox-info"
+              />
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="custom-btn btn mt-3 mx-auto"
+            style={{
+              backgroundColor: "#000",
+              border: "none",
+              borderRadius: "5px",
+              color: "#fff",
+              padding: "10px 20px",
+              transition: "transform 0.3s, background-color 0.3s",
+            }}
+          >
+            {loading ? "Loading.." : "Register"}
+          </button>
+        </form>
+        <div className="pt-3 text-center">
+          <p className="" style={{ color: "#000" }}>
+            Do you have an Account?{" "}
+            <Link to={"/login"} className="link-style">
+              Login !!
+            </Link>
+          </p>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Register;

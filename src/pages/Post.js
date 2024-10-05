@@ -14,6 +14,7 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import api from "../utils/api";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Post = ({ post }) => {
   const {
@@ -38,9 +39,11 @@ const Post = ({ post }) => {
   const [commentList, setCommentList] = useState(comments);
   const [isEditing, setIsEditing] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
+  const { authUser } = useAuth();
 
-  const user = localStorage.getItem("user");
-  const loggedInUserId = user ? JSON.parse(user).id : null;
+
+
+  const loggedInUserId =  authUser._id;
   const userId1 = userId && userId._id ? userId._id : null;
 
   useEffect(() => {
@@ -168,7 +171,7 @@ const Post = ({ post }) => {
 
   return (
     <Card
-      style={{ width: "60%", marginLeft: "20%" }}
+      style={{ width: "70%", marginLeft: "15%" }}
       className="mb-4 mt-4 shadow p-2"
     >
       <Card.Title>{userId?.username || "Unknown User"}</Card.Title>
@@ -293,7 +296,7 @@ const Post = ({ post }) => {
                         <Button
                           variant="secondary"
                           size="sm"
-                          className="ms-2"
+                          className="ms-1"
                           onClick={() => {
                             setIsEditing(false);
                             setEditingCommentId(null);
@@ -315,7 +318,7 @@ const Post = ({ post }) => {
                                   display: "inline-flex",
                                   justifyContent: "center",
                                   alignItems: "center",
-                                  gap: "20px",
+                                  gap: "10px",
                                 }}
                               >
                               
@@ -340,13 +343,13 @@ const Post = ({ post }) => {
                                 </Button>
 
                                 <h4
-                                  style={{ fontWeight: 500, color: "#0de0b6" }}
+                                  style={{ fontWeight: 400, color: "#0de0b6" }}
                                 >
                                   {comment.ownerName}
                                 </h4>
                                 <h6
                                   style={{
-                                    fontWeight: 500,
+                                    fontWeight: 400,
                                     color: "rgb(191 154 22)",
                                   }}
                                 >
@@ -363,17 +366,17 @@ const Post = ({ post }) => {
                                   display: "inline-flex",
                                   justifyContent: "center",
                                   alignItems: "center",
-                                  gap: "15px",
+                                  gap: "10px",
                                 }}
                               >
                                 <h4
-                                  style={{ fontWeight: 500, color: "#0de0b6" }}
+                                  style={{ fontWeight: 400, color: "#0de0b6" }}
                                 >
                                   {comment.ownerName}
                                 </h4>
                                 <h6
                                   style={{
-                                    fontWeight: 500,
+                                    fontWeight: 400,
                                     color: "rgb(191 154 22)",
                                   }}
                                 >

@@ -1,14 +1,12 @@
 /* Profile Container */
 .profile-container {
-    max-width: 900px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
-    background-color: #fff;
-    border: 1px solid #dbdbdb;
-    border-radius: 8px;
 }
 
+/* Profile Header */
 .profile-header {
     display: flex;
     justify-content: center;
@@ -18,6 +16,7 @@
     padding-bottom: 20px;
 }
 
+/* Profile Picture */
 .profile-pic {
     width: 200px;
     height: 200px;
@@ -27,48 +26,56 @@
     border: 1px solid #dbdbdb;
 }
 
+/* Profile Info */
 .profile-info {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-right: 160px;
+    color: aliceblue;
 }
 
 .profile-info h2 {
     margin: 0;
-    font-size: 24px;
+    font-size: 30px;
 }
 
-.stats {
+/* Stats */
+.stats1 {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     margin: 10px 0;
 }
 
-.stats span {
-    font-size: 16px;
+.stats1 span {
+    font-size: 25px;
+    font-weight: bold;
 }
 
+/* Bio */
 .bio {
-    color: #555;
-    font-size: 14px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
 }
 
+/* Edit Profile Button */
 .edit-profile-btn {
-    background-color: #15eab1;
+    background-color: #06906b;
     color: white;
     border: none;
     padding: 5px 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .edit-profile-btn:hover {
     background-color: #007bbf;
 }
 
-.follow-btn{
+/* Follow Button */
+.follow-btn {
     background-color: #6de84b;
     color: white;
     border: none;
@@ -78,7 +85,7 @@
     font-size: 14px;
 }
 
-.follow-btn:hover{
+.follow-btn:hover {
     background-color: #ead742;
 }
 
@@ -88,18 +95,20 @@
     text-align: center;
 }
 
-.posts-container h1{
+.posts-container h1 {
     color: #9b1b9b;
     text-shadow: 2px 2px #d7b2d7;
     font-weight: 900;
 }
 
+/* Post Grid */
 .post-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
 }
 
+/* Post Card */
 .post-card {
     position: relative;
     overflow: hidden;
@@ -114,6 +123,7 @@
     object-fit: cover;
 }
 
+/* Loading and Error States */
 .loading,
 .error {
     text-align: center;
@@ -126,4 +136,59 @@
     text-align: center;
     color: #888;
     font-size: 18px;
+}
+
+/* Responsive Design for Mobile Screens */
+@media (max-width: 768px) {
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    
+    
+  }
+
+  .profile-pic {
+    width: 120px; /* Adjust for smaller size */
+    height: 120px;
+    margin-right: 0px;
+    border-radius: 50%;
+  }
+
+  .profile-info {
+    margin-top: 10px;
+    text-align: center;
+    margin-right: 0px;
+  }
+
+  .stats1 {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .edit-profile-btn {
+    margin-top: 15px;
+  }
+
+  .posts-container h1 {
+    text-align: center;
+  }
+
+  .post-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .post-card {
+    height: 150px; 
+  }
 }

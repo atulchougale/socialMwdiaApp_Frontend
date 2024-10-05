@@ -1,56 +1,49 @@
 import React, { useRef, useState } from "react";
-import { Form, Button, Alert } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../../utils/api";
 import "../../styles/Auth.css";
+import { useAuth } from "../../context/AuthContext";
 
-const Login = ({ setIsAuthenticated }) => {
+const Login = () => {
   const emailInputRef = useRef(null);
-  const passInputRef = useRef(null); 
-  
+  const passInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+
+  const { setAuthUser } = useAuth();
 
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [error, setError] = useState("");
+  const [userInput, setUserInput] = useState({});
+ 
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handelInput = (e) => {
+    setUserInput({
+      ...userInput,
+      [e.target.id]: e.target.value,
+    });
   };
+  // console.log(userInput);
 
-  const handleSubmit = async (e) => {
+  const handelSubmit = async (e) => {
     e.preventDefault();
-
-    const { email, password } = formData;
-
-    if (!email || !password) {
-      setError("Please fill in all fields");
-      return;
-    }
-
-    setError("");
-
+    setLoading(true)
     try {
-      const response = await api.post("/auth/login", formData);
-
-      if (response.status === 200) {
-        const { token, user } = response.data;
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        setIsAuthenticated(true);
-        toast.success("Logged in successfully!");
-        navigate("/");
-      }
+        const login = await api.post(`/auth/login`, userInput);
+        const data = login.data;
+        if (data.success === false) {
+            setLoading(false)
+            console.log(data.message);
+        }
+        toast.success(data.message)
+        localStorage.setItem('mysocialmedia',JSON.stringify(data));
+        setAuthUser(data)
+        setLoading(false)
+        navigate('/')
     } catch (error) {
-      setError(error.response?.data?.message || "Login failed");
-      toast.error(
-        "Login failed: " +
-          (error.response?.data?.message || "Something went wrong")
-      );
+        setLoading(false)
+        console.log(error);
+        toast.error(error?.response?.data?.message)
     }
   };
 
@@ -64,56 +57,77 @@ const Login = ({ setIsAuthenticated }) => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-form">
-        <h2>Login</h2>
-        {error && <Alert variant="danger">{error}</Alert>}
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="email">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
+    <div className="d-flex flex-column align-items-center justify-content-center min-vh-100">
+      <div className="custom-bg">
+        <h1 className="text-center fw-bold mb-4 login-title">
+          Login <span style={{ color: "#000" }}>MySocialApp</span>
+        </h1>
+        <form onSubmit={handelSubmit} className="d-flex flex-column text-dark">
+          <div className="mb-3">
+            <label
+              className="form-label fw-bold"
+              htmlFor="email"
+              style={{ color: "#000" }}
+            >
+              <div className="text-start">
+                <span className="fw-bold text-dark fs-5">Email :</span>
+              </div>
+            </label>
+            <input
+              id="email"
+              name="email"
               ref={emailInputRef}
               type="email"
-              placeholder="Enter email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
+              onChange={handelInput}  // Updated correctly
+              onKeyDown={handleKeyDown} // Updated correctly
+              placeholder="Enter your email"
+              required
+              className="form-control input-style"
             />
-          </Form.Group>
-
-          <Form.Group controlId="password" className="mt-3">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              ref={passInputRef}
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              onKeyDown={handleKeyDown}
-            />
-          </Form.Group>
-
-          <Button variant="primary" type="submit" className="mt-4">
-            Login
-          </Button>
-
-          <div className="mt-3">
-            <p>
-              You Don't have an account?{" "}
-              <Button
-            
-                className="btn btn-warning"
-                variant="warning"
-                o
-                onClick={() => navigate("/register")}
-              >
-                Create New
-              </Button>
-            </p>
           </div>
-        </Form>
+          <div className="mb-3">
+            <label
+              className="form-label fw-bold"
+              htmlFor="password"
+              style={{ color: "#000" }}
+            >
+              <span className="fw-bold text-dark fs-5">Password :</span>
+            </label>
+            <input
+              ref={passInputRef}
+              id="password"
+              name="password"
+              type="password"
+              onChange={handelInput} // Updated correctly
+              onKeyDown={handleKeyDown} // Updated correctly
+              placeholder="Enter your password"
+              required
+              className="form-control input-style"
+            />
+          </div>
+          <button
+            type="submit"
+            className="custom-btn btn mt-3 mx-auto"
+            style={{
+              backgroundColor: "#000",
+              border: "none",
+              borderRadius: "5px",
+              color: "#fff",
+              padding: "10px 20px",
+              transition: "transform 0.3s, background-color 0.3s",
+            }}
+          >
+            {loading ? "Loading.." : "Login"}
+          </button>
+        </form>
+        <div className="pt-3 text-center">
+          <p className="" style={{ color: "#000" }}>
+            Don't have an Account?{" "}
+            <Link to={"/register"} className="link-style">
+              Register Now!!
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

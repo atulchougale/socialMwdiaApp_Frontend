@@ -54,12 +54,16 @@ const navigate = useNavigate();
   };
 
   return (
-    <Container className="edit-profile-container mt-5">
-      <h2>Edit Profile</h2>
+    <Container className="   h-full p-3 rounded-xl shadow-lg
+       bg-gray-400 bg-clip-padding
+        backdrop-filter backdrop-blur-lg 
+        bg-opacity-0"
+        style={{ width: "60%", marginLeft: "20%", shadow:"0 0.125rem 0.25rem rgba(1, 1, 2, 0.075)"  }}>
+      <h2 className="font-bold text-4xl text-teal-500 text-center" >Edit Profile</h2>
       
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formUsername">
-          <Form.Label>Username</Form.Label>
+          <Form.Label className="font-bold text-2xl text-teal-500 text-center">Username :</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter username"
@@ -70,7 +74,7 @@ const navigate = useNavigate();
         </Form.Group>
 
         <Form.Group controlId="formEmail">
-          <Form.Label>Email</Form.Label>
+          <Form.Label className="font-bold text-2xl text-teal-500 text-center">Email :</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter email"
@@ -81,7 +85,7 @@ const navigate = useNavigate();
         </Form.Group>
 
         <Form.Group controlId="formBio">
-          <Form.Label>Bio</Form.Label>
+          <Form.Label className="font-bold text-2xl text-teal-500 text-center">Bio :</Form.Label>
           <Form.Control
             as="textarea"
             rows={3}
@@ -92,7 +96,7 @@ const navigate = useNavigate();
         </Form.Group>
 
         <Form.Group controlId="formProfilePicture">
-          <Form.Label>Profile Picture</Form.Label>
+          <Form.Label className="font-bold text-2xl text-teal-500 text-center">Profile Picture :</Form.Label>
           <Form.Control
             type="file"
             accept="image/*"

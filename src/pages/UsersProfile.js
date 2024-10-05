@@ -3,19 +3,19 @@ import "../styles/Profile.css";
 import api from "../utils/api";
 import Post from "./Post";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const UsersProfile = () => {
   const { userId } = useParams();
   //   console.log("pro",userId);
-
+  const { authUser } = useAuth();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const myProfile = localStorage.getItem("user");
-  const loggedInUserId = myProfile ? JSON.parse(myProfile).id : null;
+  const loggedInUserId = authUser ? authUser._id : null;
   // console.log(loggedInUserId);
 
   useEffect(() => {
@@ -72,22 +72,32 @@ const UsersProfile = () => {
 
   const imageUrl1 = image ? image.replace(/\\/g, "/") : "";
   const imageUrl = imageUrl1 ? imageUrl1.split("/uploads")[1] : "";
+  const url = imageUrl ? `http://localhost:5000/uploads${imageUrl}` : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+
 
   // console.log(imageUrl);
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
-    <div className="profile-container">
+    <div
+      className="profile-container  rounded-xl shadow-lg
+      bg-gray-400 bg-clip-padding
+      backdrop-filter backdrop-blur-lg mt-3 mb-3 
+      bg-opacity-0"
+    >
       <div className="profile-header">
-        <img
-          src={`http://localhost:5000/uploads${imageUrl}`}
-          alt="Profile"
-          className="profile-pic"
-        />
+        <div>
+          <img
+            src={url}
+            alt="Profile"
+            className="profile-pic"
+          />
+          <p className="bio ms-3 mt-4">{user?.bio}</p>
+        </div>
         <div className="profile-info">
           <h2>{user?.username}</h2>
-          <div className="stats">
+          <div className="stats1">
             <span>
               <strong>{posts.length}</strong> posts
             </span>
@@ -111,7 +121,15 @@ const UsersProfile = () => {
         {posts.length > 0 ? (
           posts.map((post) => <Post key={post._id} post={post} />)
         ) : (
-          <p>No posts available.</p>
+          <div
+            className="container d-flex justify-content-center align-items-center shadow-box "
+            style={{
+              shadow: "0 0.125rem 0.25rem rgba(1, 1, 2, 0.075)",
+              width: "50%",
+            }}
+          >
+            <p>No posts available.</p>
+          </div>
         )}
       </div>
     </div>
