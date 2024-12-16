@@ -14,7 +14,7 @@ export const SocketContextProvider = ({ children }) => {
   const { authUser } = useAuth();
   useEffect(() => {
     if (authUser) {
-      const socket = io("http://localhost:5000/", {
+      const socket = io("https://socialmediaapp-4gwv.onrender.com/", {
         query: {
           userId: authUser?._id,
         },
