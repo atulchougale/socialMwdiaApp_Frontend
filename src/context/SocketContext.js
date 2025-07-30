@@ -8,21 +8,30 @@ export const useSocketContext = () => {
   return useContext(SocketContext);
 };
 
+// ✅ Set your socket URL based on environment
+const SOCKET_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://socialmediaapp-4gwv.onrender.com";
 export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUser, setOnlineUser] = useState([]);
   const { authUser } = useAuth();
+
   useEffect(() => {
     if (authUser) {
-      const socket = io("https://socialmediaapp-4gwv.onrender.com/", {
+      const socket = io(SOCKET_URL, {
         query: {
           userId: authUser?._id,
         },
       });
+
       socket.on("getOnlineUsers", (users) => {
         setOnlineUser(users);
       });
+
       setSocket(socket);
+
       return () => socket.close();
     } else {
       if (socket) {
@@ -31,6 +40,7 @@ export const SocketContextProvider = ({ children }) => {
       }
     }
   }, [authUser]);
+
   return (
     <SocketContext.Provider value={{ socket, onlineUser }}>
       {children}

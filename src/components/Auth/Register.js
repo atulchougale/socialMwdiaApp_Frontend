@@ -29,7 +29,7 @@ const Register = () => {
     setInputData({ ...inputData, [e.target.id]: e.target.value });
   };
 
-  console.log(inputData);
+  //console.log(inputData);
 
   const selectGender = (selectGender) => {
     setInputData((prev) => ({

@@ -7,7 +7,6 @@ import { useAuth } from "../context/AuthContext";
 
 const UsersProfile = () => {
   const { userId } = useParams();
-  //   console.log("pro",userId);
   const { authUser } = useAuth();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -16,17 +15,14 @@ const UsersProfile = () => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   const loggedInUserId = authUser ? authUser._id : null;
-  // console.log(loggedInUserId);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await api.get(`/auth/${userId}`);
-        setUser(response.data);
-
-        // Check if the logged-in user is following this user
-        const followers = response.data.followers.includes(loggedInUserId); // Corrected here
-        setIsFollowing(followers);
+        const fetchedUser = response.data;
+        setUser(fetchedUser);
+        setIsFollowing(fetchedUser.followers.includes(loggedInUserId));
       } catch (err) {
         setError(err.message);
       } finally {
@@ -44,8 +40,6 @@ const UsersProfile = () => {
         setPosts(postsResponse.data);
       } catch (err) {
         setError(err.message);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -55,44 +49,38 @@ const UsersProfile = () => {
   const handleFollowToggle = async () => {
     try {
       if (isFollowing) {
-        const response = await api.put(`/auth/unfollow/${userId}`); // Fixed userId here
-        setIsFollowing(false);
-        window.location.reload();
+        await api.put(`/auth/unfollow/${userId}`);
+        setUser((prev) => ({
+          ...prev,
+          followers: prev.followers.filter((id) => id !== loggedInUserId),
+        }));
       } else {
-        const response = await api.put(`/auth/follow/${userId}`); // Fixed userId here
-        setIsFollowing(true);
-        window.location.reload();
+        await api.put(`/auth/follow/${userId}`);
+        setUser((prev) => ({
+          ...prev,
+          followers: [...prev.followers, loggedInUserId],
+        }));
       }
+      setIsFollowing((prev) => !prev);
     } catch (err) {
-      console.error("Error following/unfollowing user:", err.message);
+      console.error("Follow/Unfollow error:", err.message);
     }
   };
-  const image = user?.profilePicture;
-  //   console.log(image);
 
-  const imageUrl1 = image ? image.replace(/\\/g, "/") : "";
-  const imageUrl = imageUrl1 ? imageUrl1.split("/uploads")[1] : "";
-  const url = imageUrl ? `http://localhost:5000/uploads${imageUrl}` : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+  const imageUrl = user?.profilePicture
+    ? user.profilePicture.includes("uploads")
+      ? `${process.env.REACT_APP_API_BASE_URL || "http://localhost:5000"}/${user.profilePicture.replace(/\\/g, "/")}`
+      : user.profilePicture
+    : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
-
-  // console.log(imageUrl);
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">Error: {error}</div>;
 
   return (
-    <div
-      className="profile-container  rounded-xl shadow-lg
-      bg-gray-400 bg-clip-padding
-      backdrop-filter backdrop-blur-lg mt-3 mb-3 
-      bg-opacity-0"
-    >
+    <div className="profile-container rounded-xl shadow-lg bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg mt-3 mb-3 bg-opacity-0">
       <div className="profile-header">
         <div>
-          <img
-            src={url}
-            alt="Profile"
-            className="profile-pic"
-          />
+          <img src={imageUrl} alt="Profile" className="profile-pic" />
           <p className="bio ms-3 mt-4">{user?.bio}</p>
         </div>
         <div className="profile-info">
@@ -116,13 +104,14 @@ const UsersProfile = () => {
           )}
         </div>
       </div>
+
       <div className="posts-container">
         <h1>Posts</h1>
         {posts.length > 0 ? (
           posts.map((post) => <Post key={post._id} post={post} />)
         ) : (
           <div
-            className="container d-flex justify-content-center align-items-center shadow-box "
+            className="container d-flex justify-content-center align-items-center shadow-box"
             style={{
               shadow: "0 0.125rem 0.25rem rgba(1, 1, 2, 0.075)",
               width: "50%",

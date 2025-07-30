@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import api from "../utils/api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Post = ({ post }) => {
@@ -40,11 +40,11 @@ const Post = ({ post }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const { authUser } = useAuth();
+  const navigate = useNavigate();
 
-
-
-  const loggedInUserId =  authUser._id;
+  const loggedInUserId = authUser._id;
   const userId1 = userId && userId._id ? userId._id : null;
+
 
   useEffect(() => {
     setIsLiked(likedBy.includes(loggedInUserId));
@@ -137,6 +137,10 @@ const Post = ({ post }) => {
     }
   };
 
+  const usersProfile = (userId) => {
+      navigate(`/users-profile/${userId}`);
+    };
+
   const handleDeleteComment = (commentId) => {
     confirmAlert({
       title: "Confirm to Delete Comment",
@@ -159,6 +163,8 @@ const Post = ({ post }) => {
         { label: "No" },
       ],
     });
+
+    
   };
 
   const mediaStyle = {
@@ -174,7 +180,9 @@ const Post = ({ post }) => {
       style={{ width: "70%", marginLeft: "15%" }}
       className="mb-4 mt-4 shadow p-2"
     >
-      <Card.Title>{userId?.username || "Unknown User"}</Card.Title>
+      <Card.Title onClick={() => usersProfile(userId1)} style={{ cursor: "pointer" } }>
+        {userId?.username || "Unknown User"}
+      </Card.Title>
       {image ? (
         <Card.Img
           variant="top"
@@ -321,8 +329,6 @@ const Post = ({ post }) => {
                                   gap: "10px",
                                 }}
                               >
-                              
-
                                 <Button
                                   variant="link"
                                   onClick={() => {
